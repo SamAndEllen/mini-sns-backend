@@ -3,6 +3,7 @@ require('dotenv').config();
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require("koa-bodyparser");
+const cors = require('koa2-cors');
 
 const db = require('./db');
 const api = require('./api');
@@ -12,8 +13,16 @@ const router = new Router();
 
 router.use('/api', api.routes());
 
+const corsConfig = {
+    origin: '*',
+    allowMethods: ['GET', 'POST', 'PATHCH', 'DELETE', 'PUT', 'HEAD'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+    exposeHeaders: ['Content-Length', 'Date']
+};
+
 // middlewares
 app
+    .use(cors(corsConfig))
     .use(db)
     .use(bodyParser())
     .use(router.routes())
