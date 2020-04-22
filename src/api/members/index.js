@@ -7,7 +7,7 @@ const CryptoJS = require("crypto-js");
 const stringEnc = (password) => CryptoJS.HmacSHA256(password, process.env.SECRET_KEY).toString(CryptoJS.enc.Base64);
 
 memberAPI.get('/', async (ctx, next) => {
-    const [result] = await ctx.state.db.query('SELECT * FROM members_test');
+    const [result] = await ctx.state.db.query('SELECT * FROM members');
     ctx.body = result;
 });
 
