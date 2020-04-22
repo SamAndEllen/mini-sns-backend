@@ -4,6 +4,8 @@
 ```bash
 # npm install
 yarn install
+# nodemon install
+npm install -g nodemon
 ```
 
 ## Environment variable setup
