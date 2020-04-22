@@ -5,18 +5,12 @@ const Router = require('koa-router');
 const bodyParser = require("koa-bodyparser");
 
 const db = require('./db');
+const api = require('./api');
 
 const app = new Koa();
 const router = new Router();
 
-router.get('/', (ctx, next) => {
-    ctx.body = '홈';
-});
-
-router.get('/members', async (ctx, next) => {
-    const [result] = await ctx.state.db.query('SELECT * FROM members');
-    ctx.body = result;
-});
+router.use('/api', api.routes());
 
 // middlewares
 app
