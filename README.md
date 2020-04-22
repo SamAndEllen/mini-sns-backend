@@ -16,6 +16,7 @@ DATABASE = << database name >>
 USERNAME = << database username >>
 PASSWORD = << database password >>
 DB_CONNECTION_COUNT = << database connection count >>
+SECRET_KEY = << encryption secret key >>
 ```
 
 ### Compiles and hot-reloads for development

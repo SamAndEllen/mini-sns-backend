@@ -2,6 +2,9 @@ const Router = require('koa-router');
 const memberAPI = new Router();
 
 const Joi = require('joi');
+const CryptoJS = require("crypto-js");
+
+const stringEnc = (password) => CryptoJS.HmacSHA256(password, process.env.SECRET_KEY).toString(CryptoJS.enc.Base64);
 
 memberAPI.get('/', async (ctx, next) => {
     const [result] = await ctx.state.db.query('SELECT * FROM members_test');
@@ -12,11 +15,11 @@ memberAPI.post('/', async (ctx, next) => {
     const param = ctx.request.body;
 
     const [IDCheck] = await ctx.state.db.query(`
-        SELECT * FROM members_test WHERE email = '${param.email}'
+        SELECT * FROM members WHERE email = '${param.email}'
     `);
 
     const schema = Joi.object().keys({
-        name: Joi.string().alphanum().min(3).max(10).required(),
+        name: Joi.string().min(3).max(10).required(),
         email: Joi.string().email({ minDomainAtoms: 2 }).required(),
         password: Joi.string().required(),
         agreeTOS: Joi.boolean().required(),
@@ -24,16 +27,17 @@ memberAPI.post('/', async (ctx, next) => {
     });
 
     const paramCheck = Joi.validate(param, schema);
-
     if (paramCheck.error || IDCheck.length > 0) {
         ctx.status = 400;
         return;
     }
 
+    const passwordEnc = stringEnc(param.password);
+
     const [result] = await ctx.state.db.query(
     `
-        INSERT INTO mini_sns.members_test (name,email,password,agree_TOS,agree_privacy)
-        VALUES ('${param.name}', '${param.email}', '${param.password}', ${param.agreeTOS}, ${param.agreePrivacy});
+        INSERT INTO members (name,email,password,agree_TOS,agree_privacy)
+        VALUES ('${param.name}', '${param.email}', '${passwordEnc}', ${param.agreeTOS}, ${param.agreePrivacy});
     `);
 
     ctx.body = result;
