@@ -27,8 +27,13 @@ memberAPI.post('/', async (ctx, next) => {
     });
 
     const paramCheck = Joi.validate(param, schema);
-    if (paramCheck.error || IDCheck.length > 0) {
+    if (paramCheck.error) {
         ctx.status = 400;
+        return;
+    }
+
+    if (IDCheck.length > 0) {
+        ctx.status = 409;
         return;
     }
 
