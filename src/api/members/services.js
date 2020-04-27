@@ -1,5 +1,5 @@
 const CryptoJS = require("crypto-js");
-const stringEnc = (text) => CryptoJS.HmacSHA256(text, process.env.SECRET_KEY).toString(CryptoJS.enc.Base64);
+const stringEnc = (text) => CryptoJS.HmacSHA256(text, process.env.ENC_SECRET_KEY).toString(CryptoJS.enc.Base64);
 
 const mebmerTableName = 'members';
 

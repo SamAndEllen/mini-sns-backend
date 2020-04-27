@@ -16,7 +16,8 @@ DATABASE = << database name >>
 USERNAME = << database username >>
 PASSWORD = << database password >>
 DB_CONNECTION_COUNT = << database connection count >>
-SECRET_KEY = << encryption secret key >>
+ENC_SECRET_KEY = << encryption secret key >>
+JWT_SECRET_KEY = << jwt secret key >>
 ```
 
 ### Compiles and hot-reloads for development
