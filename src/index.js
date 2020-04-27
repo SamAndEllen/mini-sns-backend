@@ -7,6 +7,7 @@ const cors = require('koa2-cors');
 
 const db = require('./db');
 const api = require('./api');
+const { jwtMiddleware } = require('./lib/token');
 
 const app = new Koa();
 const router = new Router();
@@ -23,6 +24,7 @@ const corsConfig = {
 // middlewares
 app
     .use(cors(corsConfig))
+    .use(jwtMiddleware)
     .use(db)
     .use(bodyParser())
     .use(router.routes())

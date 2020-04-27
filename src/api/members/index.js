@@ -1,22 +1,19 @@
 const Router = require('koa-router');
 const memberAPI = new Router();
 
+const memberService = require('./services');
+
 const Joi = require('joi');
-const CryptoJS = require("crypto-js");
 
-const stringEnc = (password) => CryptoJS.HmacSHA256(password, process.env.SECRET_KEY).toString(CryptoJS.enc.Base64);
+const needAuthorize = require('../../lib/needAuthorize');
 
-memberAPI.get('/', async (ctx, next) => {
-    const [result] = await ctx.state.db.query('SELECT * FROM members');
+memberAPI.get('/', needAuthorize, async (ctx, next) => {
+    const result = await memberService.getMembers(ctx);
     ctx.body = result;
 });
 
 memberAPI.post('/', async (ctx, next) => {
     const param = ctx.request.body;
-
-    const [IDCheck] = await ctx.state.db.query(`
-        SELECT * FROM members WHERE email = '${param.email}'
-    `);
 
     const schema = Joi.object().keys({
         name: Joi.string().min(3).max(10).required(),
@@ -32,20 +29,14 @@ memberAPI.post('/', async (ctx, next) => {
         return;
     }
 
+    const IDCheck = await memberService.getMemberByEmail(ctx, param);
     if (IDCheck.length > 0) {
         ctx.status = 409;
         return;
     }
 
-    const passwordEnc = stringEnc(param.password);
-
-    const [result] = await ctx.state.db.query(
-    `
-        INSERT INTO members (name,email,password,agree_TOS,agree_privacy)
-        VALUES ('${param.name}', '${param.email}', '${passwordEnc}', ${param.agreeTOS}, ${param.agreePrivacy});
-    `);
-
-    ctx.body = result;
+    const joinResult = await memberService.joinMember(ctx, param);
+    ctx.body = joinResult;
 });
 
 module.exports = memberAPI;
