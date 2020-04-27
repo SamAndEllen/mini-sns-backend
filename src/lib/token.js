@@ -39,7 +39,7 @@ const jwtMiddleware = async (ctx, next) => {
             const freshToken = await generateToken({ userName }, 'user');
             ctx.cookies.set('access_token', freshToken, {
                 maxAge: 1000 * 60 * 60 * 24 * 7,
-                httpOnly: true
+                httpOnly: false
             });
         }
 

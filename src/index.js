@@ -15,9 +15,9 @@ const router = new Router();
 router.use('/api', api.routes());
 
 const corsConfig = {
-    origin: '*',
+    credentials: true,
     allowMethods: ['GET', 'POST', 'PATHCH', 'DELETE', 'PUT', 'HEAD'],
-    allowHeaders: ['Content-Type', 'Authorization'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
     exposeHeaders: ['Content-Length', 'Date']
 };
 

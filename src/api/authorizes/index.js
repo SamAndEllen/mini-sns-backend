@@ -42,7 +42,7 @@ authorizeAPI.post('/login', async (ctx, next) => {
     const token = await generateToken({ userName: emailValidation[0].name }, 'user');
     ctx.cookies.set('access_token', token, {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        httpOnly: true
+        httpOnly: false
     });
     
     ctx.body = {
@@ -51,7 +51,10 @@ authorizeAPI.post('/login', async (ctx, next) => {
 });
 
 authorizeAPI.post('/logout', async (ctx, next) => {
-    ctx.cookies.set('access_token', null);
+    ctx.cookies.set('access_token', null, {
+        maxAge: 0,
+        httpOnly: false
+    });
     ctx.body = {
         message: 'Logout Success'
     };
