@@ -20,7 +20,7 @@ authorizeAPI.post('/login', async (ctx, next) => {
     }
 
     const emailValidation = await memberService.getMemberByEmail(ctx, param);
-    
+
     if (emailValidation.length <= 0) {
         ctx.status = 500;
         ctx.body = {
@@ -39,7 +39,7 @@ authorizeAPI.post('/login', async (ctx, next) => {
         return;
     }
 
-    const token = await generateToken({ userName: 'NaRae Jo'}, 'user');
+    const token = await generateToken({ userName: emailValidation[0].name }, 'user');
     ctx.cookies.set('access_token', token, {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true
