@@ -8,8 +8,12 @@ const Joi = require('joi');
 const needAuthorize = require('../../lib/needAuthorize');
 
 hashtagAPI.get('/', needAuthorize, async (ctx, next) => {
-    const param = ctx.request.query;
-    const result = await hashtagService.getHashtagByTag(ctx, param);
+    const { hashtag } = ctx.request.query;
+
+    let result = null;
+    if (!hashtag) result = await hashtagService.getHashtags(ctx);
+    else result = await hashtagService.getHashtagByTag(ctx, { hashtag });
+
     ctx.body = result;
 });
 
