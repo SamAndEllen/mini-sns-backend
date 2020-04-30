@@ -39,7 +39,7 @@ authorizeAPI.post('/login', async (ctx, next) => {
         return;
     }
 
-    const token = await generateToken({ userName: emailValidation[0].name }, 'user');
+    const token = await generateToken({ userID: emailValidation[0].id, userName: emailValidation[0].name }, 'user');
     ctx.cookies.set('access_token', token, {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: false

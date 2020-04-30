@@ -35,8 +35,8 @@ memberAPI.post('/', async (ctx, next) => {
         return;
     }
 
-    const joinResult = await memberService.joinMember(ctx, param);
-    ctx.body = joinResult;
+    const result = await memberService.joinMember(ctx, param);
+    ctx.body = result;
 });
 
 module.exports = memberAPI;
