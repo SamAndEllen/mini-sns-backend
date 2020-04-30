@@ -47,10 +47,19 @@ exports.setFeed = async (ctx, param) => {
     return result;
 }
 
+exports.getFeedLike = async (ctx, param) => {
+    const [result] = await ctx.state.db.query(
+    `
+        SELECT * FROM ${feedLikeTableName} WHERE feed_id = ${param.feed_id} AND member_id = ${param.member_id}
+    `);
+
+    return result;
+}
+
 exports.setFeedLike = async (ctx, param) => {
     const [result] = await ctx.state.db.query(
     `
-        INSERT INTO mini_sns.feeds_likes (feed_id, member_id) VALUES (${param.feed_id}, ${param.member_id})
+        INSERT INTO ${feedLikeTableName} (feed_id, member_id) VALUES (${param.feed_id}, ${param.member_id})
         ON DUPLICATE KEY UPDATE
         deleted_at = IF(isnull(deleted_at), NOW(), null);
     `);

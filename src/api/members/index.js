@@ -12,6 +12,11 @@ memberAPI.get('/', needAuthorize, async (ctx, next) => {
     ctx.body = result;
 });
 
+memberAPI.get('/:id', needAuthorize, async (ctx, next) => {
+    const result = await memberService.getMember(ctx, { id: ctx.params.id });
+    ctx.body = result;
+});
+
 memberAPI.post('/', async (ctx, next) => {
     const param = ctx.request.body;
 

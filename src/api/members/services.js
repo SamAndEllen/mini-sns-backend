@@ -3,6 +3,12 @@ const stringEnc = (text) => CryptoJS.HmacSHA256(text, process.env.ENC_SECRET_KEY
 
 const mebmerTableName = 'members';
 
+exports.getMember = async (ctx, param) => {
+    const [result] = await ctx.state.db.query(`SELECT * FROM ${mebmerTableName} WHERE id = ${param.id}`);
+
+    return result;
+};
+
 exports.getMembers = async (ctx) => {
     const [result] = await ctx.state.db.query(`SELECT * FROM ${mebmerTableName}`);
 

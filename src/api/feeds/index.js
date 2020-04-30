@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const feedAPI = new Router();
 
 const feedService = require('./services');
+const memberService = require('../members/services');
 
 const Joi = require('joi');
 
@@ -13,6 +14,19 @@ feedAPI.get('/', needAuthorize, async (ctx, next) => {
     let result = null;
     if (!hashtag) result = await feedService.getFeeds(ctx);
     else result = await feedService.getFeedsByHashTag(ctx, { hashtag });
+
+    result = await Promise.all(
+        result.map(async feed => {
+            const members = await memberService.getMember(ctx, { id: feed.member_id });
+            const feedLikes = await feedService.getFeedLike(ctx, { feed_id: feed.id, member_id: ctx.request.user.userID });
+
+            return {
+                ...feed,
+                user_name: members[0].name,
+                feedLikes: !!(feedLikes.length > 0 && feedLikes[0].deleted_at) ? true : false
+            };
+        })
+    );
 
     ctx.body = result;
 });
