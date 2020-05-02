@@ -3,6 +3,7 @@ const feedAPI = new Router();
 
 const feedService = require('./services');
 const memberService = require('../members/services');
+const hashtagService = require('../hashtags/services');
 
 const Joi = require('joi');
 
@@ -19,11 +20,13 @@ feedAPI.get('/', needAuthorize, async (ctx, next) => {
         result.map(async feed => {
             const members = await memberService.getMember(ctx, { id: feed.member_id });
             const feedLikes = await feedService.getFeedLike(ctx, { feed_id: feed.id, member_id: ctx.request.user.userID });
+            const hashtags = await hashtagService.getHashtagByFeedID(ctx, { feed_id: feed.id });
 
             return {
                 ...feed,
                 user_name: members[0].name,
-                feedLikes: !!(feedLikes.length > 0 && feedLikes[0].deleted_at) ? true : false
+                feedLikes: !!(feedLikes.length > 0 && feedLikes[0].deleted_at) ? true : false,
+                hashtags: hashtags.length > 0 ? hashtags[0].hashtags.split(",") : []
             };
         })
     );
