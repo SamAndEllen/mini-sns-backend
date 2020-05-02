@@ -66,3 +66,24 @@ exports.setFeedLike = async (ctx, param) => {
 
     return result;
 }
+
+exports.addTotalLikes = async (ctx, param) => {
+    const [result] = await ctx.state.db.query(
+    `
+        UPDATE ${feedTableName} SET total_likes = total_likes + 1
+        WHERE id = ${param.feed_id}
+    `);
+
+    return result;
+}
+
+
+exports.removeTotalLikes = async (ctx, param) => {
+    const [result] = await ctx.state.db.query(
+    `
+        UPDATE ${feedTableName} SET total_likes = total_likes - 1
+        WHERE id = ${param.feed_id}
+    `);
+
+    return result;
+}

@@ -78,6 +78,14 @@ feedAPI.post('/:feed_id', needAuthorize, async (ctx, next) => {
     }
 
     const result = await feedService.setFeedLike(ctx, param);
+    const getFeedLike = await feedService.getFeedLike(ctx, param);
+
+    if (!!(getFeedLike.length > 0 && getFeedLike[0].deleted_at === null)) {
+        await feedService.addTotalLikes(ctx, param);
+    } else {
+        await feedService.removeTotalLikes(ctx, param);
+    }
+
     ctx.body = result;
 });
 
