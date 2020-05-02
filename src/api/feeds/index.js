@@ -24,8 +24,8 @@ feedAPI.get('/', needAuthorize, async (ctx, next) => {
 
             return {
                 ...feed,
-                user_name: members[0].name,
-                feedLikes: !!(feedLikes.length > 0 && feedLikes[0].deleted_at) ? true : false,
+                userName: members[0].name,
+                isLike: !!(feedLikes.length > 0 && feedLikes[0].deleted_at === null) ? true : false,
                 hashtags: hashtags.length > 0 ? hashtags[0].hashtags.split(",") : []
             };
         })
